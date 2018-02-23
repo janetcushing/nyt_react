@@ -3,17 +3,15 @@ import React from "react";
 
 const ArticleDetail = props => (
   <div className="text-center">
-   <h3>
-   <a href={props.web_url}>Title: {props.title}</a>
-    </h3>
+   <h4>
+   <a href={props.web_url}>{props.title}</a>
+    </h4>
     <p>
-      Snippet: {props.snippet}
+      <b>Snippet:</b> {props.snippet}
     </p>
     <p>
-      Date Published: {props.pub_date}
+      <b>Date Published:</b> {props.pub_date}
     </p>
   </div>
 );
-console.log('ArticleDetail');
-console.log(ArticleDetail);
 export default ArticleDetail;

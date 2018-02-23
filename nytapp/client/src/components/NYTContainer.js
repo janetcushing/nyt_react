@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+// import { Link } from "react-router-dom";
 import Container from "./Container";
 import Row from "./Row";
 import Col from "./Col";
@@ -21,43 +22,45 @@ class NYTContainer extends Component {
     saved: []
   };
 
-  componentWillMount(){
-    console.log("in component will mount", this.state);
+
+  //  When this component mounts, get the saved articles to display
+  componentDidMount() {
+    console.log("in component did mount", this.state);
+    this.loadSavedArticles();
   }
 
-
-  // componentDidMount(){
-  //   console.log("in component did mount", this.state);
-  // }
-   //  When this component mounts, get the saved articles to display
-   componentDidMount() {
-    console.log("in constructor");
+  loadSavedArticles = () => {
+    console.log("in loadSavedArticles");
+    console.log("state: ", this.state);
     API_db.getSavedArticles()
-      .then(function (result) {
+      .then(result => {
         console.log("im about to display result");
         console.log(result.data[0]);
-        // this.setState({
-        //   saved: result.data
-        // });
-        //   const savedDetailsArray = [];
-        //   data.savedArticles.forEach(function(element, i){
-        //     let details = {
-        //        "details_key": i,
-        //        "title": element.title,
-        //        "web_url": element.web_url ,
-        //        "pub_date": element.pub_date ,
-        //        "snippet": element.snippet
-        //      }
-        //      savedDetailsArray.push(details);
-        //      console.log("savedDetailsArray.length");
-        //      console.log(savedDetailsArray.length);
-        //     });
-        this.setState({
-          saved: [1,2,3]
+        console.log("state: ", this.state);
+        const savedDetailsArray = [];
+        result.data.forEach(function (element, i) {
+          let details = {
+            "details_key": i,
+            "id": element._id,
+            "title": element.title,
+            "web_url": element.web_url,
+            "pub_date": element.date_published,
+            "snippet": element.snippet
+          }
+          savedDetailsArray.push(details);
+          console.log("savedDetailsArray.length");
+          console.log(savedDetailsArray.length);
         });
-
+        this.setState({
+          saved: savedDetailsArray
+        });
+      }).catch(err => {
+        console.log(`Caught an error in loadSavedArticles: ${err}`);
       });
   }
+
+
+
 
 
   searchArticles = query => {
@@ -161,36 +164,50 @@ class NYTContainer extends Component {
       search: "",
       startYear: "",
       endYear: "",
-      result: [],
-      saved: []
+      result: []
     });
   };
 
 
- 
 
-  handleSave = (event, value) => {
+
+  handleSave = (event) => {
     event.preventDefault();
     console.log(`im in handleSave`);
     console.log("value", event.target.value)
+    let i = event.target.value; 
     let detailsToSave = {
       title: this.state.result[event.target.value].title,
       web_url: this.state.result[event.target.value].web_url,
       snippet: this.state.result[event.target.value].snippet,
-      date_pub: this.state.result[event.target.value].date_pub
+      pub_date: this.state.result[event.target.value].pub_date
     }
     console.log(detailsToSave);
     API_db.saveArticle(detailsToSave);
     console.log("savedResult");
+    this.removeFromResult(i);
+    this.loadSavedArticles();
+
   };
 
 
+  removeFromResult = (i) => {
+    console.log(`im in removeFromResult`);
+    let results = this.state.result
+    results.splice(i,1);
+    this.setState({
+      result: results
+    });
+  }
 
-  handleRemove = event => {
+  handleRemove = (event) => {
+    console.log(`im in handleSave`);
+    console.log("value", event.target.value)
     event.preventDefault();
-    let id2 = "5a8ef069e35f8e094c318115"
-    console.log(`im in handleRemove ${id2}`);
-    API_db.deleteSavedArticle(id2);
+    let id = event.target.value;
+    console.log(`im in handleRemove ${id}`);
+    API_db.deleteSavedArticle(id);
+    this.loadSavedArticles();
   };
 
 
@@ -250,7 +267,7 @@ class NYTContainer extends Component {
                       <ArticleDetail
                         title={element.title}
                         web_url={element.web_url}
-                        snippit={element.snippet}
+                        snippet={element.snippet}
                         pub_date={element.pub_date}
                       />
                       <button id="saveBtn"
@@ -278,12 +295,12 @@ class NYTContainer extends Component {
                       <ArticleDetail
                         title={element.title}
                         web_url={element.web_url}
-                        snippit={element.snippet}
+                        snippet={element.snippet}
                         pub_date={element.pub_date}
                       />
                       <button id="removeBtn"
                         onClick={this.handleRemove}
-                        value={element.details_key}
+                        value={element.id}
                         className="btn btn-primary" >
                         Remove
                         </button>

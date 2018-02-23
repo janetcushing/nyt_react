@@ -1,36 +1,54 @@
-Promise {<pending>}
+Promise { < pending >
+}
 __proto__
-:
-Promise
-[[PromiseStatus]]
-:
-"resolved"
-[[PromiseValue]]
-:
-Object
+    :
+    Promise[[PromiseStatus]]:
+    "resolved" [
+        [PromiseValue]
+    ]:
+    Object
 config
-:
-{adapter: ƒ, transformRequest: {…}, transformResponse: {…}, timeout: 0, xsrfCookieName: "XSRF-TOKEN", …}
+    : {
+        adapter: ƒ,
+        transformRequest: {…},
+        transformResponse: {…},
+        timeout: 0,
+        xsrfCookieName: "XSRF-TOKEN",
+        …
+    }
 data
-:
-savedArticles
-:
-(3) [{…}, {…}, {…}]
+    :
+    savedArticles:
+    (3)[{…}, {…}, {…}]
 __proto__
-:
-Object
+    :
+    Object
 headers
-:
-{date: "Fri, 23 Feb 2018 01:19:49 GMT", content-encoding: "gzip", x-powered-by: "Express", etag: "W/"571-OvaVfG6J6E3m2siGFLuffEYjaeE"", vary: "Accept-Encoding", …}
+    : {
+        date: "Fri, 23 Feb 2018 01:19:49 GMT",
+        content - encoding: "gzip",
+        x - powered - by: "Express",
+        etag: "W/"
+        571 - OvaVfG6J6E3m2siGFLuffEYjaeE "",
+        vary: "Accept-Encoding",
+        …
+    }
 request
-:
-XMLHttpRequest {onreadystatechange: ƒ, readyState: 4, timeout: 0, withCredentials: false, upload: XMLHttpRequestUpload, …}
+    :
+    XMLHttpRequest {
+        onreadystatechange: ƒ,
+        readyState: 4,
+        timeout: 0,
+        withCredentials: false,
+        upload: XMLHttpRequestUpload,
+        …
+    }
 status
-:
-200
+    :
+    200
 statusText
-:
-"OK"
+    :
+    "OK"
 __proto__
-:
-Object
+    :
+    Object
