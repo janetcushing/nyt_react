@@ -40,7 +40,7 @@ function getSavedArticles2(req, res) {
 // remove a saved article document from the collection
 //-----------------------------------------------------
 function removeSavedArticle(req, res) {
-  console.log("im in removeSavedArticle");
+  console.log(`im in removeSavedArticle ${req.params.id}`);
   Articles.findById(req.params.id)
   .remove()
   .then(function (data) {
@@ -63,7 +63,7 @@ function insertNewArticle(req, res) {
     title: req.body.title,
     web_url: req.body.web_url,
     snippet: req.body.snippet,
-    date_pub: req.body.date_pub
+    date_published: req.body.pub_date
   };
   Articles.create(currentArticle, function (err, data) {
     if (err) {
