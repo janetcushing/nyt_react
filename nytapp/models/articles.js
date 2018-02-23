@@ -30,11 +30,10 @@ const ArticlesSchema = new Schema({
   },
   date_published: {
     type: String,
-    trim: true,
-    required: "date published is Required"
+    trim: true
   }
 });
 
-const Articles = mongoose.model("NYTArticles", ArticlesSchema);
+const Articles = mongoose.model("Articles", ArticlesSchema);
 
 module.exports = Articles;

@@ -12,32 +12,67 @@ import ArticleDetail from "./ArticleDetail";
 
 
 class NYTContainer extends Component {
- // Setting the component's initial state
- state = {
-  search: "",
-  numRecs: "",
-  startYear: "",
-  endYear: "",
-  result: []
-};
+  // Setting the component's initial state
+  state = {
+    search: "",
+    startYear: "",
+    endYear: "",
+    result: [],
+    saved: []
+  };
+
+  componentWillMount(){
+    console.log("in component will mount", this.state);
+  }
+
+
+  // componentDidMount(){
+  //   console.log("in component did mount", this.state);
+  // }
+   //  When this component mounts, get the saved articles to display
+   componentDidMount() {
+    console.log("in constructor");
+    API_db.getSavedArticles()
+      .then(function (result) {
+        console.log("im about to display result");
+        console.log(result.data[0]);
+        // this.setState({
+        //   saved: result.data
+        // });
+        //   const savedDetailsArray = [];
+        //   data.savedArticles.forEach(function(element, i){
+        //     let details = {
+        //        "details_key": i,
+        //        "title": element.title,
+        //        "web_url": element.web_url ,
+        //        "pub_date": element.pub_date ,
+        //        "snippet": element.snippet
+        //      }
+        //      savedDetailsArray.push(details);
+        //      console.log("savedDetailsArray.length");
+        //      console.log(savedDetailsArray.length);
+        //     });
+        this.setState({
+          saved: [1,2,3]
+        });
+
+      });
+  }
 
 
   searchArticles = query => {
     console.log("Im in searchArticles")
-    let recCount = 0;
     let beginDate;
     let endDate;
-    if(this.state.numRecs){
-      recCount = this.state.numRecs
-    } else {recCount = 2};
-    if(this.state.startYear){
-      beginDate = this.state.startYear + "0101"};
-      if(this.state.endYear){
-        endDate = this.state.endYear + "1231"};
-    
+    if (this.state.startYear) {
+      beginDate = this.state.startYear.toString() + "0101"
+    };
+    if (this.state.endYear) {
+      endDate = this.state.endYear.toString() + "1231"
+    };
+
     const query1 = ({
       'q': this.state.search,
-      'fq': recCount,
       'begin_date': beginDate,
       'end_date': endDate
     });
@@ -48,22 +83,28 @@ class NYTContainer extends Component {
     //   .catch(err => console.log(err));
     let url =
       "https://api.nytimes.com/svc/search/v2/articlesearch.json?";
-      url += "apikey=c0b4d2e16a014795bbdce9d7e4df8a95"
-      url += "&q="  + query1.q;
-      url += "&fq=" + query1.fq;
-      console.log(`url: ${url}`);
+    url += "apikey=c0b4d2e16a014795bbdce9d7e4df8a95";
+    url += "&q=" + query1.q;
+    if (query1.begin_date) {
+      url += "&begin_date=" + query1.begin_date;
+    }
+    if (query1.end_date) {
+      url += "&end_date=" + query1.end_date;
+    }
+    // url += "fl=web_url,snippet,pub_date,headline,_id";
+    console.log(`url: ${url}`);
     axios
       .get(url)
       .then(response => {
         console.log(`came back successfully`);
         const detailsArray = [];
-        
-        response.data.response.docs.forEach(function(element, i){
-         let details = {
+
+        response.data.response.docs.forEach(function (element, i) {
+          let details = {
             "details_key": i,
             "title": response.data.response.docs[i].headline.main,
-            "web_url": response.data.response.docs[i].web_url ,
-            "pub_date": response.data.response.docs[i].pub_date ,
+            "web_url": response.data.response.docs[i].web_url,
+            "pub_date": response.data.response.docs[i].pub_date,
             "snippet": response.data.response.docs[i].snippet
           }
           detailsArray.push(details);
@@ -85,7 +126,6 @@ class NYTContainer extends Component {
     // Getting the value and name of the input which triggered the change
     let value = event.target.value;
     const name = event.target.name;
-
     // Updating the input's state
     this.setState({
       [name]: value
@@ -103,13 +143,11 @@ class NYTContainer extends Component {
     console.log(this.state.numRecs);
     this.setState({
       search: this.state.search,
-      numRecs: this.state.numRecs,
       startYear: this.state.startYear,
       endYear: this.state.endYear
     });
     console.log("I just set the state");
     console.log(this.setState.search);
-    console.log(this.setState.numRecs);
     this.searchArticles(this.state.search);
     // this.setState({
     //   result: detailsArray
@@ -121,31 +159,39 @@ class NYTContainer extends Component {
     event.preventDefault();
     this.setState({
       search: "",
-      numRecs: "",
       startYear: "",
       endYear: "",
-      result: []
+      result: [],
+      saved: []
     });
   };
 
-  //  When this component mounts, get the saved articles to display
-  componentDidMount() {
-    console.log("in componentDidMount");
-    const response = API_db.getSavedArticles();
-    console.log(response);
-  }
 
-  handleSave = result => {
-    console.log(`im in handleSave ${result.title}`);
-    API_db.saveArticle(result);
-    console.log("result");
-    console.log(result);
-  }
+ 
 
-  handleRemove = id =>{
-    console.log(`im in handleRemove ${id}`);
-    API_db.deleteSavedArticle(id);
-  }
+  handleSave = (event, value) => {
+    event.preventDefault();
+    console.log(`im in handleSave`);
+    console.log("value", event.target.value)
+    let detailsToSave = {
+      title: this.state.result[event.target.value].title,
+      web_url: this.state.result[event.target.value].web_url,
+      snippet: this.state.result[event.target.value].snippet,
+      date_pub: this.state.result[event.target.value].date_pub
+    }
+    console.log(detailsToSave);
+    API_db.saveArticle(detailsToSave);
+    console.log("savedResult");
+  };
+
+
+
+  handleRemove = event => {
+    event.preventDefault();
+    let id2 = "5a8ef069e35f8e094c318115"
+    console.log(`im in handleRemove ${id2}`);
+    API_db.deleteSavedArticle(id2);
+  };
 
 
   render() {
@@ -153,96 +199,100 @@ class NYTContainer extends Component {
       <Container>
         <Row>
           <Col size="sm-12">
-            <Jumbotron heading="New York Times Search"/>
+            <Jumbotron heading="New York Times Search" />
           </Col>
         </Row>
         <Row>
           <Col size="sm-12">
             <Panel heading="Search">
-            <div>
-      <form className = "form" >
-      <label htmlform = "search" > Search Topic: </label> 
-      <input value = {this.state.search}
-      name = "search"
-      onChange = {this.handleInputChange}
-      type = "text"
-      placeholder = "" /> 
-      <label htmlform = "search" > Start Year(Optional): </label> 
-      <input value = {this.state.startYear}
-      name = "startYear"
-      onChange = {this.handleInputChange}
-      type = "text"
-      placeholder = "" />
-      <label htmlform = "search" > End Year(Optional) </label> 
-      <input value = {this.state.endYear}
-      name = "endYear"
-      onChange = {this.handleInputChange}
-      type = "text"
-      placeholder = "" />
-        <label htmlform = "search" > Number of Records to Retrieve: </label>
-      <input value = {this.state.numRecs}
-      name = "numRecs"
-      onChange = {this.handleInputChange}
-      type = "text"
-      placeholder = "Default: 10" />
-      <button id = "searchBtn"
-      onClick = {this.handleFormSubmit}
-      className = "btn btn-primary" >
-      Search 
-      </button> 
-      <button id = "clearBtn"
-      onClick = {this.handleFormClear}
-      className = "btn btn-primary" > Clear </button>
-      </form> 
-      </div>
+              <div>
+                <form className="form" >
+                  <label htmlform="search" > Search Topic: </label>
+                  <input value={this.state.search}
+                    name="search"
+                    onChange={this.handleInputChange}
+                    type="text"
+                    placeholder="" />
+                  <label htmlform="search" > Start Year(Optional): </label>
+                  <input value={this.state.startYear}
+                    name="startYear"
+                    onChange={this.handleInputChange}
+                    type="text"
+                    placeholder="" />
+                  <label htmlform="search" > End Year(Optional) </label>
+                  <input value={this.state.endYear}
+                    name="endYear"
+                    onChange={this.handleInputChange}
+                    type="text"
+                    placeholder="" />
+                  <button id="searchBtn"
+                    onClick={this.handleFormSubmit}
+                    className="btn btn-primary" >
+                    Search
+      </button>
+                  <button id="clearBtn"
+                    onClick={this.handleFormClear}
+                    className="btn btn-primary" > Clear </button>
+                </form>
+              </div>
             </Panel>
           </Col>
         </Row>
-   
+
         <Row>
           <Col size="sm-12">
             <Panel heading="Top Articles">
-            <div>  
-                 <ul className="list-group">
-                    {this.state.result.map(result =>
-                   <li className="list-group-item" 
-                   key={result.details_key}>
-                     <ArticleDetail
-                    title= {result.title}
-                    web_url={result.web_url}
-                    snippit={result.snippet}
-                    pub_date={result.pub_date}      
-                  /> 
-                  <button id = "saveBtn"
-      onClick = {this.handleSave}
-      className = "btn btn-primary" >
-      Save 
-      </button> </li>
-    )}
-  </ul>
-  </div>
+              <div>
+                <ul className="list-group">
+                  {this.state.result.map(element =>
+                    <li className="list-group-item"
+                      key={element.details_key}>
+                      <ArticleDetail
+                        title={element.title}
+                        web_url={element.web_url}
+                        snippit={element.snippet}
+                        pub_date={element.pub_date}
+                      />
+                      <button id="saveBtn"
+                        onClick={this.handleSave}
+                        value={element.details_key}
+                        className="btn btn-primary" >
+                        Save
+                        </button>
+                    </li>
+                  )}
+                </ul>
+              </div>
             </Panel>
-          </Col>  
+          </Col>
         </Row>
 
-         <Row>
+        <Row>
           <Col size="sm-12">
             <Panel heading="Saved Articles">
-              {this.state.result
-                ? <div>
-                <h3>{this.state.result.title}</h3>
-                <p>{this.state.result.web_url}</p>
-                <p>{this.state.result.snippet}</p>
-                <p>{this.state.result.pub_date}</p>
-                <button id = "removeBtn"
-      onClick = {this.handleRemove}
-      className = "btn btn-primary" >
-      Remove
-      </button> 
-                </div>
-                : <h3>No Results to Display</h3>}
+              <div>
+                <ul className="list-group">
+                  {this.state.saved.map(element =>
+                    <li className="list-group-item"
+                      key={element.details_key}>
+                      <ArticleDetail
+                        title={element.title}
+                        web_url={element.web_url}
+                        snippit={element.snippet}
+                        pub_date={element.pub_date}
+                      />
+                      <button id="removeBtn"
+                        onClick={this.handleRemove}
+                        value={element.details_key}
+                        className="btn btn-primary" >
+                        Remove
+                        </button>
+                    </li>
+                  )}
+                </ul>
+              </div>
             </Panel>
-          </Col>  
+          </Col>
         </Row>
       </Container>
     );
