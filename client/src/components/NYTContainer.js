@@ -117,8 +117,6 @@ class NYTContainer extends Component {
         this.setState({
           result: detailsArray
         });
-        console.log("setState result");
-        console.log(this.state.result);
       })
       .catch(error => {
         console.log(error);
