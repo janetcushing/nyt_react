@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const PORT = process.env.PORT || 3001;
+// mongoose dependency used for accessing mongodb collection
+var mongoose = require("mongoose");
 
 // Configure body parser for AJAX requests
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -13,10 +15,10 @@ app.use(express.static("client/build"));
 // connect to the controller for app routes
 //------------------------------------------
 var routes = require("./controller/controller.js");
-app.use("/", routes);
+// app.use("/", routes);
+app.use(routes);
 
-// mongoose dependency used for accessing mongodb collection
-var mongoose = require("mongoose");
+
 
 // Requiring the `Article` model for accessing the collection
 var Articles = require("./models/articles.js");
