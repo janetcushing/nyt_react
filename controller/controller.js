@@ -5,7 +5,7 @@
 // import React from "react";
 const Express = require("express");
 // const db = require("../models");
-const  Request = require("request");
+// const  Request = require("request");
 const  mongojs = require("mongojs");
 // const Articles = require("../models/articles");
 const router = Express.Router();
@@ -105,6 +105,10 @@ router.delete("/api/article/:id", function (req, res) {
   removeSavedArticle(req, res);
 });
 
+// If no API routes are hit, send the React app
+router.use(function(req, res) {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+});
 
 //--------------------------------------
 // Export routes for server.js to use.
