@@ -105,6 +105,10 @@ router.delete("/api/article/:id", function (req, res) {
   removeSavedArticle(req, res);
 });
 
+// If no API routes are hit, send the React app
+router.use(function(req, res) {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+});
 
 //--------------------------------------
 // Export routes for server.js to use.
