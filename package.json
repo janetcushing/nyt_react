@@ -4,32 +4,32 @@
   "description": "An app to search the New York Times API for articles",
   "main": "server.js",
   "scripts": {
-  "server": "node server.js",
-  "client": "node scripts/start-client.js",
-  "start": "concurrently \"nodemon server.js\" \"npm run client\"",
-  "build": "node scripts/build.js",
-  "seed": "node scripts/seedDB.js",
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "installDeps": "yarn && cd client && yarn",
-  "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
-},
-"author": "Janet Cushing",
-"license": "ISC",
-"dependencies": {
-  "body-parser": "^1.18.2",
-  "express": "^4.16.2",
-  "mongo": "^0.1.0",
-  "mongojs": "^2.5.0",
-  "mongoose": "^5.0.6",
-  "react-router-dom": "^4.2.2"
-},
-"devDependencies": {
-  "concurrently": "^3.5.0",
-  "nodemon": "^1.11.0"
-},
-"repository": "git+https://github.com/janetcushing/nyt_react.git",
-"bugs": {
-  "url": "https://github.com/janetcushing/nyt_react/issues"
-},
-"homepage": "https://github.com/janetcushing/nyt_react#readme"
+    "server": "node server.js",
+    "client": "node scripts/start-client.js",
+    "start": "concurrently \"nodemon server.js\" \"npm run client\"",
+    "build": "node scripts/build.js",
+    "seed": "node scripts/seedDB.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "installDeps": "yarn && cd client && yarn",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+  },
+  "author": "Janet Cushing",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongo": "^0.1.0",
+    "mongojs": "^2.5.0",
+    "mongoose": "^5.0.6",
+    "react-router-dom": "^4.2.2"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.1",
+    "nodemon": "^1.11.0"
+  },
+  "repository": "git+https://github.com/janetcushing/nyt_react.git",
+  "bugs": {
+    "url": "https://github.com/janetcushing/nyt_react/issues"
+  },
+  "homepage": "https://github.com/janetcushing/nyt_react#readme"
 }
